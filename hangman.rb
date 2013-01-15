@@ -13,13 +13,13 @@ class Hangman
   def play
     if pick_guesser == "H" # human guesser
       # create computer
-      @game_host = Computer.new
+      @game_host = Computer.new #BY Game host as an instance variable idea is cool. 
       # pick a word
       @game_host.pick_secret_word
       # create the board
       @game_board = Array.new(@game_host.secret_word.size, "_")
 
-      puts "The secret word is: #{@game_host.secret_word}"
+      puts "The secret word is: #{@game_host.secret_word}" #BY why are you showing the word?
       # start guess loop
       let_human_guess
 
@@ -51,12 +51,12 @@ class Hangman
     @wrong_guesses += 1 if !secret_word_letters.include? letter
 
     # Call back recursively
-    let_human_guess unless (victory? || lynching?)
+    let_human_guess unless (victory? || lynching?) #BY nice concise recursive
   end
 
   def pick_guesser
     guesser = nil
-    while guesser != "H" && guesser != "C"
+    while guesser != "H" && guesser != "C" #BY do you need this while loop since you're only going to choose this once?
       puts "Who's going to guess? (C)omputer or (H)uman"
       guesser = gets.chomp.upcase
     end
@@ -64,7 +64,7 @@ class Hangman
   end
 
   def victory?
-    !@game_board.include?("_")
+    !@game_board.include?("_") #BY this is neat
   end
 
   # The man has been hanged :(
