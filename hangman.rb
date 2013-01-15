@@ -49,11 +49,16 @@ class Computer < Player
   def get_word_length
   end
 
-  # Returns a secret word.  If no length is given, then a word between 
-  # 3 and 10 letters is randomly selected.
-  def pick_secret_word(word_length=(rand(3..10)))
+  # # Returns a secret word.  If no length is given, then a word between 
+  # # 3 and 10 letters is randomly selected.
+  # def pick_secret_word(word_length=(rand(3..10)))
+  #   words = load_dictionary(@dictionary_file)
+  #   words.select { |word| word.size == word_length }.sample
+  # end
+
+  def pick_secret_word(word_length=nil)
     words = load_dictionary(@dictionary_file)
-    words.select { |word| word.size == word_length }
+    word_length.nil? ? words.sample : words.select { |w| w.size == word_length }.sample
   end
 
   def load_dictionary(filename)
