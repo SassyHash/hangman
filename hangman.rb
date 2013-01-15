@@ -42,8 +42,11 @@ end
 
 
 class Computer < Player
+  attr_accessor :secret_word
+
   def initialize
     @dictionary_file = "dictionary.txt"
+    @secret_word = nil
   end
 
   def get_word_length
@@ -58,7 +61,7 @@ class Computer < Player
 
   def pick_secret_word(word_length=nil)
     words = load_dictionary(@dictionary_file)
-    word_length.nil? ? words.sample : words.select { |w| w.size == word_length }.sample
+    @secret_word = word_length.nil? ? words.sample : words.select { |w| w.size == word_length }.sample
   end
 
   def load_dictionary(filename)
