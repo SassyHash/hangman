@@ -19,6 +19,7 @@ class Hangman
       # create the board
       @game_board = Array.new(@game_host.secret_word.size, "_")
 
+      puts "The secret word is: #{@game_host.secret_word}"
       # start guess loop
       let_human_guess
 
@@ -28,10 +29,12 @@ class Hangman
         puts "You lose, BE SAD."
       end
     else # computer guesser
+      # Do some computery guessing
     end
   end
 
   def let_human_guess
+    puts "Number of wrong guesses: #{@wrong_guesses}"
     puts "Secret word: #{@game_board}"
     print "> "
 
@@ -44,6 +47,10 @@ class Hangman
       @game_board[i] = letter if el == letter
     end
 
+    # Update the wrong guess count if the letter isn't in our word
+    @wrong_guesses += 1 if !secret_word_letters.include? letter
+
+    # Call back recursively
     let_human_guess unless (victory? || lynching?)
   end
 
@@ -60,6 +67,7 @@ class Hangman
     !@game_board.include?("_")
   end
 
+  # The man has been hanged :(
   def lynching?
     BODY_PARTS_ALLOWED == @wrong_guesses
   end
@@ -86,10 +94,6 @@ class Computer < Player
     @secret_word = nil
   end
 
-  # def word_length
-  #   @secret_word.size
-  # end
-
   # # Returns a secret word.  If no length is given, then a word between 
   # # 3 and 10 letters is randomly selected.
   # def pick_secret_word(word_length=(rand(3..10)))
@@ -103,8 +107,7 @@ class Computer < Player
   end
 
   def load_dictionary(filename)
-    tmp_dict_array = []
-    File.foreach(filename) { |word| tmp_dict_array << word.downcase.strip }
-    return tmp_dict_array
+    # Assume each line is a word
+    File.readlines(filename) { |line| line.downcase.chomp }
   end
 end
