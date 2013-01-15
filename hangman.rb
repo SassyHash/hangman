@@ -6,17 +6,54 @@ class Hangman
   def initialize
     @game_board = []
     @word_length = nil
+    @game_host
     @wrong_guesses = 0
   end
 
   def play
+    if pick_guesser == "H" # human guesser
+      # create computer
+      @game_host = Computer.new
+      # pick a word
+      @game_host.pick_secret_word
+      # create the board
+      @game_board = Array.new(@game_host.secret_word.size, "_")
 
-    # secret_word = computer.pick_secret_word(load_dictionary(@dictionary_file))
-    # secret_word.size.times { @game_board << "_" }
-    @game_board = Array.new(@word_length , "_")
+      # start guess loop
+      let_human_guess
 
-    until victory? || lynching?
+      if victory? 
+        puts "You won, NICE!"
+      else
+        puts "You lose, BE SAD."
+      end
+    else # computer guesser
     end
+  end
+
+  def let_human_guess
+    puts "Secret word: #{@game_board}"
+    print "> "
+
+    # Whatever crap they give us, just take the first letter
+    letter = gets.chomp.split(//).first
+
+    # Update the board
+    secret_word_letters = @game_host.secret_word.split(//)
+    secret_word_letters.each_with_index do |el, i|
+      @game_board[i] = letter if el == letter
+    end
+
+    let_human_guess unless (victory? || lynching?)
+  end
+
+  def pick_guesser
+    guesser = nil
+    while guesser != "H" && guesser != "C"
+      puts "Who's going to guess? (C)omputer or (H)uman"
+      guesser = gets.chomp.upcase
+    end
+    guesser
   end
 
   def victory?
@@ -27,8 +64,8 @@ class Hangman
     BODY_PARTS_ALLOWED == @wrong_guesses
   end
 
-  def print_board
-    puts @game_board.join('')
+  def board
+    @game_board.join('')
   end
 end
 
@@ -49,8 +86,9 @@ class Computer < Player
     @secret_word = nil
   end
 
-  def get_word_length
-  end
+  # def word_length
+  #   @secret_word.size
+  # end
 
   # # Returns a secret word.  If no length is given, then a word between 
   # # 3 and 10 letters is randomly selected.
